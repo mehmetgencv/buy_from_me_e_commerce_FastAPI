@@ -5,6 +5,11 @@ from tortoise.contrib.fastapi import register_tortoise
 from app.models import *
 from app.authentication import *
 
+from tortoise.signals import post_save
+from typing import List, Optional, Type
+from tortoise import BaseDBAsyncClient
+
+
 app = FastAPI()
 
 
@@ -23,6 +28,21 @@ async def user_registrations(user: user_pydanticIn):
         "data": f"Hello {new_user.username}, thanks for registering. "
                 f"Please check your email to verify your email.",
     }
+
+@post_save(User)
+async def create_business(
+        sender: "Type[User]",
+        instance: User,
+        created: bool,
+        using_db: "Optional[BaseDBAsyncClient]",
+        update_fields: List[str],
+)-> None:
+    if created:
+        business_obj = await Business.create(
+            business_name=instance.username,
+            owner=instance
+        )
+        await business_pydantic.from_tortoise_orm(business_obj)
 
 register_tortoise(
     app,
