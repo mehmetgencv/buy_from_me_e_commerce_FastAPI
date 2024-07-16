@@ -33,3 +33,4 @@ archive.zip
 /test_main.http
 /database.sqlite3-shm
 /database.sqlite3-wal
+/.env
