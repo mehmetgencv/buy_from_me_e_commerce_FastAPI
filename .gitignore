@@ -29,3 +29,7 @@ archive.zip
 
 # macOS
 .DS_Store
+/database.sqlite3
+/test_main.http
+/database.sqlite3-shm
+/database.sqlite3-wal
