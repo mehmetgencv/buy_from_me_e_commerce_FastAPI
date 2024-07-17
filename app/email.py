@@ -11,7 +11,6 @@ from app.models import User
 
 config_credentials = dotenv_values(".env")
 
-
 conf = ConnectionConfig(
     MAIL_USERNAME=config_credentials["EMAIL"],
     MAIL_PASSWORD=config_credentials["PASS"],
@@ -42,7 +41,7 @@ async def send_email(email: List, instance:User):
             <div style=" display: flex; align-items: center; justify-content: center; flex-direction: column;">
                 <h3> Account Verification </h3>
                 <br>
-                <p>Thanks for choosing EasyShopas, please 
+                <p>Thanks for choosing BuyFromMe, please 
                 click on the link below to verify your account</p> 
 
                 <a style="margin-top:1rem; padding: 1rem; border-radius: 0.5rem; font-size: 1rem; text-decoration: none; background: #0275d8; color: white;"
@@ -50,7 +49,7 @@ async def send_email(email: List, instance:User):
                     Verify your email
                 <a>
 
-                <p style="margin-top:1rem;">If you did not register for EasyShopas, 
+                <p style="margin-top:1rem;">If you did not register for BuyFromMe, 
                 please kindly ignore this email and nothing will happen. Thanks<p>
             </div>
         </body>
