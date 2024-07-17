@@ -17,7 +17,7 @@
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/buyFromMe.git
+   git clone https://github.com/mehmetgencv/buy_from_me_e_commerce_FastAPI.git
    cd buyFromMe
    ```
 
@@ -81,20 +81,6 @@ You can access the Swagger UI documentation at:
 ```
 http://127.0.0.1:8000/docs
 ```
-
-### Registration Endpoint
-
-To register a new user, you can use the following endpoint:
-
-```python
-@app.post("/registration")
-async def register_user(username: str, email: str, password: str):
-    # Registration logic here
-```
-
-- `username` - Required, unique, max length 20 characters
-- `email` - Required, unique, max length 200 characters
-- `password` - Required, max length 100 characters
 
 ### License
 
