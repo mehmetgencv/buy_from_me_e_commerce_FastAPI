@@ -36,7 +36,7 @@ async def user_registrations(user: user_pydanticIn):
 
 
 templates = Jinja2Templates(directory="templates")
-@app.get("/verífication", response_class=HTMLResponse)
+@app.get("/verification", response_class=HTMLResponse)
 async def email_verification(request: Request, token: str):
     user = await verify_token(token)
     if user and not user.is_verified:
