@@ -61,6 +61,8 @@ async def generate_token(request_form: OAuth2PasswordRequestForm = Depends()):
 @app.post("/user/me")
 async def user_login(user: user_pydanticIn = Depends(get_current_user)):
     business = await Business.get(owner=user)
+    logo = business.logo
+    logo_path = "http://localhost:8000/static/images/" + logo
     return {
         "status": "success",
         "data": {
@@ -68,6 +70,7 @@ async def user_login(user: user_pydanticIn = Depends(get_current_user)):
             "email": user.email,
             "verified": user.is_verified,
             "join_date": user.join_date.strftime("%m/%d/%Y"),
+            "logo": logo_path
 
         }
     }
@@ -193,6 +196,8 @@ async def create_update_file(id: int, file: UploadFile = File(...),
         "status": "success",
         "filename": file_url
     }
+
+
 
 
 register_tortoise(
