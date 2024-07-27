@@ -119,7 +119,7 @@ async def create_business(
         await send_email([instance.email], instance)
 
 
-@app.post("/uploadfile/profile")
+@app.post("/upload-file/profile")
 async def create_upload_file(file: UploadFile = File(...),
                              user: user_pydantic = Depends(get_current_user)):
     FILEPATH = "./static/ímages/"
@@ -158,7 +158,7 @@ async def create_upload_file(file: UploadFile = File(...),
     }
 
 
-@app.post("/uploadfile/product/{id}")
+@app.post("/upload-file/product/{id}")
 async def create_update_file(id: int, file: UploadFile = File(...),
                              user: user_pydantic = Depends(get_current_user)):
     FILEPATH = "./static/ímages/"
@@ -267,6 +267,55 @@ async def delete_product(id: int, user: user_pydantic = Depends(get_current_user
     return {
         "status": "success",
         "data": "Deleted"
+    }
+
+@app.put("/product/{id}")
+async def update_product(id: int,
+                         updated_product: product_pydanticIn,
+                         user: user_pydantic = Depends(get_current_user)):
+
+    product = await Product.get(id=id)
+    business = await product.business
+    owner = await business.owner
+
+    update_info = updated_product.dict(exclude_unset=True)
+
+    if not owner == user or update_info["original_price"] <= 0:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                            detail="Not authorized to perform this action.",
+                            headers={"WWW-Authenticate": "Bearer"})
+
+    update_info["percentage_discount"] = ((update_info["original_price"] - update_info["new_price"]) /
+                                          update_info["original_price"]) * 100
+    update_info["date_published"] = datetime.utcnow()
+    product = await product.update_from_dict(update_info)
+    await product.save()
+    response = await product_pydantic.from_tortoise_orm(product)
+    return {
+        "status": "success",
+        "data": response
+    }
+
+@app.put("/business/{id}")
+async def update_business(id: int,
+                          updated_business: business_pydanticIn,
+                          user: user_pydantic = Depends(get_current_user)):
+
+    update_info = updated_business.dict()
+    business = await Business.get(id=id)
+    business_owner = await business.owner
+
+    if not business_owner == user:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                            detail="Not authorized to perform this action.",
+                            headers={"WWW-Authenticate": "Bearer"})
+
+    await business.update_from_dict(update_info)
+    await business.save()
+    response = await business_pydantic.from_tortoise_orm(business)
+    return {
+        "status": "success",
+        "data": response
     }
 
 
